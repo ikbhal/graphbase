@@ -66,7 +66,7 @@ app.use(cors()); // Add this line to enable CORS
 // Middleware to parse JSON in request bodies
 app.use(express.json());
 
-app.get('/ping', (res, res)=> {
+app.get('/ping', (req, res)=> {
   res.send('pong');
 });
 
