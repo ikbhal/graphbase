@@ -362,6 +362,52 @@ app.get('/getEdges', (req, res) => {
   });
 });
 
+
+// drop edges between source and target key
+app.delete('/deleteEdge/:source/:target', (req, res) => {
+  const sourceNodeKey = req.params.source;
+  const targetNodeKey = req.params.target;
+
+  const edges = graph.outEdges(sourceNodeKey, targetNodeKey);
+
+  if (edges.length === 0) {
+    res.status(404).json({
+      success: false,
+      message: 'Edges not found between the specified nodes',
+    });
+    return;
+  }
+
+  edges.forEach(edgeKey => {
+    graph.dropEdge(edgeKey);
+  });
+
+  res.json({
+    success: true,
+    message: 'Edges deleted successfully',
+  });
+});
+
+
+//v 6 drop edge by key
+app.delete('/deleteEdgeByKey/:key', (req, res) => {
+  const edgeKey = req.params.key;
+
+  if (graph.hasEdge(edgeKey)) {
+    graph.dropEdge(edgeKey);
+
+    res.json({
+      success: true,
+      message: 'Edge deleted successfully',
+    });
+  } else {
+    res.status(404).json({
+      success: false,
+      message: 'Edge not found',
+    });
+  }
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

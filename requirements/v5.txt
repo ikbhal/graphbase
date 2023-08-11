@@ -1,4 +1,6 @@
 1)export api
-2)import api
+not yet 2)import api
 3)list of edges 
 4)edge from source node key , target node key 
+5) delete edge from source node key , target node key
+6) delete edge from edge key 
