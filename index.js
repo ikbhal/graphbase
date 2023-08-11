@@ -102,7 +102,49 @@ app.get('/getNode/:key', (req, res) => {
     }
   });
 
+
+  // delete node 
+  app.delete('/deleteNode/:key', (req, res) => {
+    const nodeKey = req.params.key;
+  
+    if (graph.hasNode(nodeKey)) {
+      graph.dropNode(nodeKey);
+  
+      res.json({
+        success: true,
+        message: 'Node deleted successfully',
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'Node not found',
+      });
+    }
+  });
+
+  
+// DELETE /deleteEdge/:key endpoint
+app.delete('/deleteEdge/:key', (req, res) => {
+  const edgeKey = req.params.key;
+
+  if (graph.hasEdge(edgeKey)) {
+    graph.dropEdge(edgeKey);
+
+    res.json({
+      success: true,
+      message: 'Edge deleted successfully',
+    });
+  } else {
+    res.status(404).json({
+      success: false,
+      message: 'Edge not found',
+    });
+  }
+});
+
+  
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
