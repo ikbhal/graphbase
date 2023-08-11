@@ -1,2 +1,6 @@
+
+1) delete node key
+2) delete edge key
+---
 use events npm package 
 on each change api , add, deelte, update , send event to save , on listen save to json file 

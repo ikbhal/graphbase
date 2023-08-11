@@ -51,7 +51,7 @@ app.post('/addEdge', (req, res) => {
     const { edgeKey, sourceNodeKey, targetNodeKey, properties } = req.body;
   
     // Add the edge to the graph
-    graph.addEdge(edgeKey, sourceNodeKey, targetNodeKey, properties);
+    graph.addEdgeWithKey(edgeKey, sourceNodeKey, targetNodeKey, properties);
   
     // Respond with success message
     res.json({
@@ -65,18 +65,39 @@ app.get('/getEdge/:key', (req, res) => {
     const edgeKey = req.params.key;
   
     if (graph.hasEdge(edgeKey)) {
-      const { source, target, attributes } = graph.getEdgeAttributes(edgeKey);
+    //   const { source, target, attributes } = graph.getEdgeAttributes(edgeKey);
+
+    const attributes = graph.getEdgeAttributes(edgeKey);
   
       res.json({
         edgeKey,
-        sourceNodeKey: source,
-        targetNodeKey: target,
+        // sourceNodeKey: source,
+        // targetNodeKey: target,
         properties: attributes,
       });
     } else {
       res.status(404).json({
         success: false,
         message: 'Edge not found',
+      });
+    }
+  });
+
+// GET /getNode/:key endpoint
+app.get('/getNode/:key', (req, res) => {
+    const nodeKey = req.params.key;
+  
+    if (graph.hasNode(nodeKey)) {
+      const properties = graph.getNodeAttributes(nodeKey);
+  
+      res.json({
+        nodeKey,
+        properties,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'Node not found',
       });
     }
   });
