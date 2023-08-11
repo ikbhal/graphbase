@@ -8,7 +8,7 @@ const EventEmitter = require('events'); // Import the events package
 
 // Create an Express app
 const app = express();
-const port = process.env.PORT || 3028;
+const port = process.env.PORT || 3027;
 
 // Create an instance of the graph
 
@@ -65,6 +65,10 @@ app.use(cors()); // Add this line to enable CORS
 
 // Middleware to parse JSON in request bodies
 app.use(express.json());
+
+app.get('/ping', (res, res)=> {
+  res.send('pong');
+});
 
 // Define the POST /addNode endpoint
 app.post('/addNode', (req, res) => {

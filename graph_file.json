@@ -1,0 +1,29 @@
+{
+  "nodes": [
+    {
+      "nodeKey": "iq",
+      "properties": {
+        "name": "iqbal",
+        "place": "Pileru"
+      }
+    },
+    {
+      "nodeKey": "su",
+      "properties": {
+        "name": "sumiya",
+        "place": "Kadapa"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "edgeKey": "iq_su_couple",
+      "sourceNodeKey": "iq",
+      "targetNodeKey": "su",
+      "properties": {
+        "married": "2009 march 14",
+        "married_place": "Kadapa"
+      }
+    }
+  ]
+}
