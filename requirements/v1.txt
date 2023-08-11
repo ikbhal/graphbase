@@ -1,0 +1,18 @@
+graph api 
+
+graphbase.rontohub.com 
+1) add node api (node key, properties
+1) add edge api (edge key, source node key, target node key, edge properties)
+1) delete node by key 
+1) delete edge by key 
+1) get nodes all 
+1) get all edges 
+
+---
+1) generate rest api contract 
+---
+will be building on top graphology npm package
+built on top of node.js express express-session 
+connect-flash, 
+---
+1) build rest api 
