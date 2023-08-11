@@ -143,6 +143,53 @@ app.delete('/deleteEdge/:key', (req, res) => {
 });
 
   
+app.put('/updateProperty/:nodeKey', (req, res) => {
+  const nodeKey = req.params.nodeKey;
+  const { propertyKey, propertyValue } = req.body;
+
+  if (graph.hasNode(nodeKey)) {
+    graph.setNodeAttribute(nodeKey, propertyKey, propertyValue);
+
+    res.json({
+      success: true,
+      message: 'Property updated for node successfully',
+    });
+  } else {
+    res.status(404).json({
+      success: false,
+      message: 'Node not found',
+    });
+  }
+});
+
+app.delete('/deleteProperty/:nodeKey/:propertyKey', (req, res) => {
+  const nodeKey = req.params.nodeKey;
+  const propertyKey = req.params.propertyKey;
+
+  if (graph.hasNode(nodeKey)) {
+    
+    if(graph.hasNodeAttribute(nodeKey,propertyKey)){
+      graph.removeNodeAttribute(nodeKey, propertyKey);
+      res.json({
+        success: true,
+        message: 'Property deleted from node successfully',
+      });
+    }
+    else{
+      res.status(404).json({
+        success: false,
+        message: 'Node property not found',
+      });
+    }
+
+    
+  } else {
+    res.status(404).json({
+      success: false,
+      message: 'Node not found',
+    });
+  }
+});
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
