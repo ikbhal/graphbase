@@ -2,6 +2,8 @@ const express = require('express');
 const graphology = require('graphology');
 const cors = require('cors');
 const fs = require('fs');
+const EventEmitter = require('events'); // Import the events package
+
 
 // Create an Express app
 const app = express();
