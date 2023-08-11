@@ -8,7 +8,6 @@ const app = express();
 const port = process.env.PORT || 3028;
 
 // Create an instance of the graph
-// const graph = new graphology.Graph();
 
 // Create an event emitter instance
 const eventEmitter = new EventEmitter();
@@ -22,7 +21,6 @@ eventEmitter.on('propertyUpdated', () => saveGraphToJson());
 eventEmitter.on('propertyDeleted', () => saveGraphToJson());
 
 // Example usage
-// const loadedGraph = loadGraphFromJson(path.join(__dirname, 'graph_file.json'));
 const graph = loadGraphFromJson(path.join(__dirname, 'graph_file.json'));
 
 // Save the graph data to a JSON file
