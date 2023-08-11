@@ -346,6 +346,22 @@ app.get('/getEdges/:source/:target', (req, res) => {
   });
 });
 
+app.get('/getEdges', (req, res) => {
+  const edges = graph.edges(); // Get all edge keys
+
+  const edgeList = edges.map(edgeKey => {
+    const attributes = graph.getEdgeAttributes(edgeKey);
+    return {
+      edgeKey,
+      properties: attributes,
+    };
+  });
+
+  res.json({
+    edges: edgeList,
+  });
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
