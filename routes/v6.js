@@ -70,7 +70,7 @@ router.post('/:filename/addEdge', (req, res) => {
 });
 
 // GET /getEdge/:key endpoint
-router.get('/getEdge/:key', (req, res) => {
+router.get('/:filename/getEdge/:key', (req, res) => {
   const edgeKey = req.params.key;
   const graph = req.graph;
 
@@ -94,7 +94,7 @@ router.get('/getEdge/:key', (req, res) => {
 });
 
 // GET /getNode/:key endpoint
-router.get('/getNode/:key', (req, res) => {
+router.get('/:filename/getNode/:key', (req, res) => {
   const nodeKey = req.params.key;
   const graph = req.graph;
 
@@ -114,7 +114,7 @@ router.get('/getNode/:key', (req, res) => {
 });
 
 // delete node 
-router.delete('/deleteNode/:key', (req, res) => {
+router.delete('/:filename/deleteNode/:key', (req, res) => {
   const nodeKey = req.params.key;
   const graph = req.graph;
   const graph_file_path = req.graph_file_path;
@@ -136,7 +136,7 @@ router.delete('/deleteNode/:key', (req, res) => {
 
 
 // DELETE /deleteEdge/:key endpoint
-router.delete('/deleteEdge/:key', (req, res) => {
+router.delete('/:filename/deleteEdge/:key', (req, res) => {
   const edgeKey = req.params.key;
   const graph = req.graph;
   const graph_file_path = req.graph_file_path;
@@ -159,7 +159,7 @@ router.delete('/deleteEdge/:key', (req, res) => {
 });
 
 
-router.put('/updateProperty/:nodeKey', (req, res) => {
+router.put('/:filename/updateProperty/:nodeKey', (req, res) => {
   const nodeKey = req.params.nodeKey;
   const { propertyKey, propertyValue } = req.body;
   const graph = req.graph;
@@ -181,7 +181,7 @@ router.put('/updateProperty/:nodeKey', (req, res) => {
   }
 });
 
-router.delete('/deleteProperty/:nodeKey/:propertyKey', (req, res) => {
+router.delete('/:filename/deleteProperty/:nodeKey/:propertyKey', (req, res) => {
   const nodeKey = req.params.nodeKey;
   const propertyKey = req.params.propertyKey;
   const graph = req.graph;
@@ -216,7 +216,7 @@ router.delete('/deleteProperty/:nodeKey/:propertyKey', (req, res) => {
 
 //v 5
 
-router.get('/exportGraph', (req, res) => {
+router.get('/:filename/exportGraph', (req, res) => {
   const graph = req.graph;
   try {
     const graphData = {
