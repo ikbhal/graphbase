@@ -4,6 +4,10 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const EventEmitter = require('events'); // Import the events package
+const v6Router = require('./routes/v6'); // Import the v6 router
+const {getDefaultGraphFile, 
+  saveGraphToJson,
+  loadGraphFromJson} = require('./util/graph_util'); // Import the graph utility functions
 
 
 // Create an Express app
@@ -15,53 +19,26 @@ const port = process.env.PORT || 3027;
 // Create an event emitter instance
 const eventEmitter = new EventEmitter();
 
-// Define event listeners for different changes
-eventEmitter.on('nodeAdded', () => saveGraphToJson());
-eventEmitter.on('nodeDeleted', () => saveGraphToJson());
-eventEmitter.on('edgeAdded', () => saveGraphToJson());
-eventEmitter.on('edgeDeleted', () => saveGraphToJson());
-eventEmitter.on('propertyUpdated', () => saveGraphToJson());
-eventEmitter.on('propertyDeleted', () => saveGraphToJson());
+
+eventEmitter.on('nodeAdded', (filePath) => saveGraphToJson(filePath));
+eventEmitter.on('nodeDeleted', (filePath) => saveGraphToJson(filePath));
+eventEmitter.on('edgeAdded', (filePath) => saveGraphToJson(filePath));
+eventEmitter.on('edgeDeleted', (filePath) => saveGraphToJson(filePath));
+eventEmitter.on('propertyUpdated', (filePath) => saveGraphToJson(filePath));
+eventEmitter.on('propertyDeleted', (filePath) => saveGraphToJson(filePath));
+
+
+// default graph file 
+// const defaultGraphFile = path.join(__dirname, 'graph_file.json');
+// getDefaultGraphFile
 
 // Example usage
-const graph = loadGraphFromJson(path.join(__dirname, 'graph_file.json'));
-
-// Save the graph data to a JSON file
-function saveGraphToJson() {
-  const graphData = {
-    nodes: [],
-    edges: [],
-  };
-
-  graph.forEachNode((node, attributes) => {
-    graphData.nodes.push({
-      nodeKey: node,
-      properties: attributes,
-    });
-  });
-
-  graph.forEachEdge((edge, attributes, source, target) => {
-    graphData.edges.push({
-      edgeKey: edge,
-      sourceNodeKey: source,
-      targetNodeKey: target,
-      properties: attributes,
-    });
-  });
-
-  const filePath = path.join(__dirname, 'graph_file.json');
-
-  fs.writeFile(filePath, JSON.stringify(graphData, null, 2), 'utf8', err => {
-    if (err) {
-      console.error('Error saving graph data to JSON file:', err);
-    } else {
-      console.log('Graph data saved to graph_file.json');
-    }
-  });
-}
+const graph = loadGraphFromJson(getDefaultGraphFile());
 
 // Middleware to enable CORS
 app.use(cors()); // Add this line to enable CORS
+
+app.use('/v6/graph', v6Router);
 
 // Middleware to parse JSON in request bodies
 app.use(express.json());
@@ -76,7 +53,8 @@ app.post('/addNode', (req, res) => {
 
   // Add the node to the graph
   graph.addNode(nodeKey, properties);
-  eventEmitter.emit('nodeAdded');
+  // eventEmitter.on('nodeAdded', (filePath) => saveGraphToJson(filePath));
+  eventEmitter.emit('nodeAdded', getDefaultGraphFile());
 
   // Respond with success message
   res.json({
@@ -108,7 +86,7 @@ app.post('/addEdge', (req, res) => {
 
   // Add the edge to the graph
   graph.addEdgeWithKey(edgeKey, sourceNodeKey, targetNodeKey, properties);
-  eventEmitter.emit('edgeAdded');
+  eventEmitter.emit('edgeAdded', getDefaultGraphFile());
 
   // Respond with success message
   res.json({
@@ -165,7 +143,7 @@ app.delete('/deleteNode/:key', (req, res) => {
 
   if (graph.hasNode(nodeKey)) {
     graph.dropNode(nodeKey);
-    eventEmitter.emit('nodeDeleted'); // Emit event for node deletion
+    eventEmitter.emit('nodeDeleted', getDefaultGraphFile());
     res.json({
       success: true,
       message: 'Node deleted successfully',
@@ -186,7 +164,7 @@ app.delete('/deleteEdge/:key', (req, res) => {
   if (graph.hasEdge(edgeKey)) {
     graph.dropEdge(edgeKey);
     // edgeDeleted
-    eventEmitter.emit('edgeDeleted');
+    eventEmitter.emit('edgeDeleted', getDefaultGraphFile());
 
     res.json({
       success: true,
@@ -207,7 +185,7 @@ app.put('/updateProperty/:nodeKey', (req, res) => {
 
   if (graph.hasNode(nodeKey)) {
     graph.setNodeAttribute(nodeKey, propertyKey, propertyValue);
-    eventEmitter.emit('propertyUpdated');
+    eventEmitter.emit('propertyUpdated', getDefaultGraphFile());
 
     res.json({
       success: true,
@@ -229,7 +207,8 @@ app.delete('/deleteProperty/:nodeKey/:propertyKey', (req, res) => {
 
     if (graph.hasNodeAttribute(nodeKey, propertyKey)) {
       graph.removeNodeAttribute(nodeKey, propertyKey);
-      eventEmitter.emit('propertyDeleted');
+      eventEmitter.emit('propertyDeleted', getDefaultGraphFile());
+
       res.json({
         success: true,
         message: 'Property deleted from node successfully',
