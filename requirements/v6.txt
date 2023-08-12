@@ -1,0 +1,6 @@
+1)new file save 
+1) new file load 
+
+1)pass parameter or path parameter  
+file path parameter in the graph  api 
+1)for all api  
