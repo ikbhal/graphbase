@@ -51,7 +51,7 @@ function loadGraphFromJson(filePath) {
 }
 
 // const filePath = path.join(__dirname, 'graph_file.json');
-function saveGraphToJson(filePath = getDefaultGraphFile()) {
+function saveGraphToJson(graph, filePath = getDefaultGraphFile()) {
     const graphData = {
         nodes: [],
         edges: [],
@@ -77,7 +77,7 @@ function saveGraphToJson(filePath = getDefaultGraphFile()) {
         if (err) {
             console.error('Error saving graph data to JSON file:', err);
         } else {
-            console.log(`Graph data saved to ${filepath}`);
+            console.log(`Graph data saved to ${filePath}`);
         }
     });
 }

@@ -19,13 +19,15 @@ const port = process.env.PORT || 3027;
 // Create an event emitter instance
 const eventEmitter = new EventEmitter();
 
-
-eventEmitter.on('nodeAdded', (filePath) => saveGraphToJson(filePath));
-eventEmitter.on('nodeDeleted', (filePath) => saveGraphToJson(filePath));
-eventEmitter.on('edgeAdded', (filePath) => saveGraphToJson(filePath));
-eventEmitter.on('edgeDeleted', (filePath) => saveGraphToJson(filePath));
-eventEmitter.on('propertyUpdated', (filePath) => saveGraphToJson(filePath));
-eventEmitter.on('propertyDeleted', (filePath) => saveGraphToJson(filePath));
+eventEmitter.on('nodeAdded', (graph, filePath) =>{ 
+  
+  saveGraphToJson(graph, filePath);
+});
+eventEmitter.on('nodeDeleted', (graph, filePath) => saveGraphToJson(graph, filePath));
+eventEmitter.on('edgeAdded', (graph, filePath) => saveGraphToJson(graph, filePath));
+eventEmitter.on('edgeDeleted', (graph, filePath) => saveGraphToJson(graph, filePath));
+eventEmitter.on('propertyUpdated', (graph, filePath) => saveGraphToJson(graph, filePath));
+eventEmitter.on('propertyDeleted', (graph, filePath) => saveGraphToJson(graph, filePath));
 
 
 // default graph file 
@@ -54,7 +56,7 @@ app.post('/addNode', (req, res) => {
   // Add the node to the graph
   graph.addNode(nodeKey, properties);
   // eventEmitter.on('nodeAdded', (filePath) => saveGraphToJson(filePath));
-  eventEmitter.emit('nodeAdded', getDefaultGraphFile());
+  eventEmitter.emit('nodeAdded', graph, getDefaultGraphFile());
 
   // Respond with success message
   res.json({
@@ -86,7 +88,7 @@ app.post('/addEdge', (req, res) => {
 
   // Add the edge to the graph
   graph.addEdgeWithKey(edgeKey, sourceNodeKey, targetNodeKey, properties);
-  eventEmitter.emit('edgeAdded', getDefaultGraphFile());
+  eventEmitter.emit('edgeAdded', graph, getDefaultGraphFile());
 
   // Respond with success message
   res.json({
@@ -143,7 +145,7 @@ app.delete('/deleteNode/:key', (req, res) => {
 
   if (graph.hasNode(nodeKey)) {
     graph.dropNode(nodeKey);
-    eventEmitter.emit('nodeDeleted', getDefaultGraphFile());
+    eventEmitter.emit('nodeDeleted', graph, getDefaultGraphFile());
     res.json({
       success: true,
       message: 'Node deleted successfully',
@@ -164,7 +166,7 @@ app.delete('/deleteEdge/:key', (req, res) => {
   if (graph.hasEdge(edgeKey)) {
     graph.dropEdge(edgeKey);
     // edgeDeleted
-    eventEmitter.emit('edgeDeleted', getDefaultGraphFile());
+    eventEmitter.emit('edgeDeleted', graph, getDefaultGraphFile());
 
     res.json({
       success: true,
@@ -185,7 +187,7 @@ app.put('/updateProperty/:nodeKey', (req, res) => {
 
   if (graph.hasNode(nodeKey)) {
     graph.setNodeAttribute(nodeKey, propertyKey, propertyValue);
-    eventEmitter.emit('propertyUpdated', getDefaultGraphFile());
+    eventEmitter.emit('propertyUpdated', graph, getDefaultGraphFile());
 
     res.json({
       success: true,
@@ -207,7 +209,7 @@ app.delete('/deleteProperty/:nodeKey/:propertyKey', (req, res) => {
 
     if (graph.hasNodeAttribute(nodeKey, propertyKey)) {
       graph.removeNodeAttribute(nodeKey, propertyKey);
-      eventEmitter.emit('propertyDeleted', getDefaultGraphFile());
+      eventEmitter.emit('propertyDeleted', graph, getDefaultGraphFile());
 
       res.json({
         success: true,
